@@ -43,6 +43,7 @@
   --bad:#B5382C;
   --shadow:0 1px 2px rgba(36,30,21,.07), 0 10px 26px -14px rgba(36,30,21,.30);
   --tabbar:rgba(251,247,238,.92);
+  --hit-bg:#EAF0FB; --hit-line:#C5D4EE;
 
   --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"DejaVu Sans Mono",monospace;
   --sans:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
@@ -57,6 +58,7 @@
     --ink-red:#D9736A; --ink-blue:#7EA2DC; --ink-green:#5BAF88;
     --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.7);
     --tabbar:rgba(16,24,48,.92);
+    --hit-bg:#18233F; --hit-line:#2E3E60;
   }
 }
 :root[data-theme="dark"]{
@@ -68,6 +70,7 @@
   --ink-red:#D9736A; --ink-blue:#7EA2DC; --ink-green:#5BAF88;
   --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.7);
   --tabbar:rgba(16,24,48,.92);
+  --hit-bg:#18233F; --hit-line:#2E3E60;
 }
 :root[data-theme="light"]{
   --bg:#EFE9DC; --surface:#FBF7EE; --surface-2:#F1EADB;
@@ -77,6 +80,7 @@
   --field:#FFFDF7; --good:#2F7D5F; --bad:#B5382C;
   --shadow:0 1px 2px rgba(36,30,21,.07), 0 10px 26px -14px rgba(36,30,21,.30);
   --tabbar:rgba(251,247,238,.92);
+  --hit-bg:#EAF0FB; --hit-line:#C5D4EE;
 }
 
 *{box-sizing:border-box}
@@ -370,6 +374,74 @@ main{
   font-variant-numeric:tabular-nums; margin:-2px 0 0;
 }
 .ptline b{color:var(--bar-pt); font-weight:700}
+.card-remove{
+  position:absolute; right:9px; top:9px; z-index:2;
+  width:26px; height:26px; padding:0; cursor:pointer;
+  font:inherit; font-size:1.05rem; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; color:var(--text-3);
+  background:var(--surface-2); border:1px solid var(--line);
+}
+.card-remove:hover{border-color:var(--bad); color:var(--bad)}
+.card-remove:focus-visible{outline:2px solid var(--flap); outline-offset:1px}
+.results .chip .sub{color:var(--text-3); font-weight:400; margin-left:2px}
+/* カード検索の候補を縦一列で見やすく */
+.hitlist{display:flex; flex-direction:column; gap:7px}
+.hit{
+  position:relative; width:100%; text-align:left; cursor:pointer;
+  font:inherit; color:var(--text);
+  /* 比較表(surface)と区別するため、検索結果は淡い青の地＋左に青帯 */
+  background:var(--hit-bg);
+  border:1px solid var(--hit-line); border-left:4px solid var(--ink-blue);
+  border-radius:10px;
+  padding:11px 42px 11px 13px;
+  display:flex; flex-direction:column; gap:7px;
+  transition:border-color .12s, filter .12s;
+}
+.hit:hover{border-color:var(--flap); border-left-color:var(--ink-blue)}
+.hit:active{filter:brightness(.97)}
+.hit:focus-visible{outline:2px solid var(--flap); outline-offset:1px}
+.hit-main{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.hit-name{font-weight:700; font-size:.9rem; line-height:1.3}
+.hit-stats{display:flex; gap:7px; flex-wrap:wrap}
+.pill{
+  font-family:var(--mono); font-size:.72rem; font-weight:700;
+  padding:2px 9px; border-radius:20px; white-space:nowrap;
+}
+.pill.fee{color:var(--bad);  background:color-mix(in srgb, var(--bad) 12%, transparent)}
+.pill.pt {color:var(--good); background:color-mix(in srgb, var(--good) 14%, transparent)}
+.hit-plus{
+  position:absolute; right:11px; top:50%; margin-top:-14px;
+  width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.15rem; line-height:1; font-weight:700;
+  color:#fff; background:var(--ink-blue);
+}
+.present-note{color:var(--ink-blue); font-weight:600; margin-top:4px}
+/* 手入力で追加するボタンとフォーム */
+.manual-add{
+  width:100%; margin-top:8px; cursor:pointer; font:inherit;
+  font-size:.8rem; font-weight:700; padding:9px;
+  color:var(--ink-blue); background:transparent;
+  border:1px dashed var(--ink-blue); border-radius:9px;
+}
+.manual-add:hover{background:var(--hit-bg)}
+.manual-box{
+  background:var(--hit-bg); border:1px solid var(--hit-line);
+  border-radius:11px; padding:14px; display:flex; flex-direction:column; gap:10px;
+}
+.mf{display:flex; flex-direction:column; gap:4px}
+.mf > span{font-size:.72rem; font-weight:700; color:var(--text-2)}
+.mf input, .mf select{
+  font:inherit; font-size:.9rem; padding:8px 9px;
+  color:var(--text); background:var(--field);
+  border:1px solid var(--line); border-radius:8px;
+}
+.mf input:focus, .mf select:focus{outline:2px solid var(--flap); outline-offset:1px}
+.mf-row{display:flex; gap:10px}
+.mf-row .mf{flex:1 1 0; min-width:0}
+.btn.primary{background:var(--ink-blue); border-color:var(--ink-blue); color:#fff}
+.btn.primary:hover{filter:brightness(1.06); border-color:var(--ink-blue)}
 
 /* ── 両替ペア（元通貨 → 先通貨） ──
    横並びにすると通貨名が切れるので縦に積む。矢印も下向きにする。 */
@@ -617,6 +689,10 @@ details.about[open] > summary::before{content:"− "}
         <span><i class="sw" style="background:var(--bar-fee)"></i>外貨決済手数料</span>
         <span><i class="sw" style="background:var(--bar-pt)"></i>ポイント還元</span>
       </div>
+      <input id="cardSearch" class="cityinput" type="text"
+             placeholder="カード名で追加（例: 三井住友／dカード／JAL）"
+             aria-label="カードを名前で検索して比較に追加" />
+      <div class="results" id="cardResults"></div>
       <div class="rows" id="rowsCard"></div>
 
       <details class="settings">
@@ -984,26 +1060,419 @@ details.about[open] > summary::before{content:"− "}
     mc:    {label:"Mastercard", spread:0.20},
     jcb:   {label:"JCB",        spread:0.40},
     amex:  {label:"Amex",       spread:0.50},
+    diners:{label:"Diners",     spread:0.50},
     mid:   {label:"実勢レート",  spread:0.00}
   };
 
   var CARDS = [
     {id:"rakuten",   name:"楽天カード（Visa）", brand:"visa", fee:3.63, pt:1.00,
-     ptName:"楽天ポイント", note:"事務手数料は全ブランド共通で3.63％（2025年3月〜）"},
+     ptName:"楽天ポイント", aliases:["楽天","Rakuten","らくてん"],
+     note:"事務手数料は全ブランド共通で3.63％（2025年3月〜）"},
     {id:"rakutenMc", name:"楽天カード（Mastercard）", brand:"mc", fee:3.63, pt:1.00,
-     ptName:"楽天ポイント", note:"手数料はVisaと同じ。ブランド基準レートの分だけ差が出る"},
+     ptName:"楽天ポイント", aliases:["楽天","Rakuten","マスター"],
+     note:"手数料はVisaと同じ。ブランド基準レートの分だけ差が出る"},
     {id:"epos",      name:"エポスカード", brand:"visa", fee:3.85, pt:0.50,
-     ptName:"エポスポイント", note:"2025年7月に2.20％から3.85％へ改定"},
+     ptName:"エポスポイント", aliases:["エポス","EPOS","マルイ","えぽす"],
+     note:"2025年7月に2.20％から3.85％へ改定"},
     {id:"jcb",       name:"ANA JCB CARD FIRST", brand:"jcb", fee:1.60, pt:1.00,
-     ptName:"ANAマイル",
+     ptName:"ANAマイル", aliases:["ANA","全日空","JCB","ファースト","First"],
      note:"18〜29歳・学生不可、年会費無料。200円=1 J-POINT=2マイルで還元1％。JCB発行なので発行会社の上乗せなし"},
     {id:"amex",      name:"アメックス・プラチナ", brand:"amex", fee:3.50, pt:3.00,
-     ptName:"メンバーシップ・リワード", note:"外貨建て100円=3ポイント。リワード・プラス＋海外利用ボーナスの登録が前提"},
+     ptName:"メンバーシップ・リワード", aliases:["アメックス","Amex","AMEX","プラチナ","Platinum"],
+     note:"外貨建て100円=3ポイント。リワード・プラス＋海外利用ボーナスの登録が前提"},
     {id:"wise",      name:"Wise", brand:"mid", fee:0.45, pt:0.00,
-     ptName:"", note:"実勢レート＋変換手数料。料率は通貨・金額で変わります"},
+     ptName:"", aliases:["ワイズ","Wise","TransferWise","トランスファーワイズ","わいず"],
+     note:"実勢レート＋変換手数料。料率は通貨・金額で変わります"},
     {id:"revolut",   name:"Revolut", brand:"mid", fee:0.00, pt:0.00, dynamic:true,
-     ptName:"", note:"平日・月75万円以内なら手数料なし"}
+     ptName:"", aliases:["レボリュート","Revolut","リボルト","レヴォリュート"],
+     note:"平日・月75万円以内なら手数料なし"}
   ];
+
+  /* 検索して比較に追加できるカードのデータベース。
+     ★fee(海外事務手数料％)・pt(還元率％)は各社公表値。数字が命なので推測で埋めない。 */
+  var CARD_DB = [
+    {name:"楽天カード（Visa）", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天","Rakuten","らくてん"],
+     note:"2025年3月に3.63%へ再値上げ。全ブランド共通"},
+    {name:"楽天カード（Mastercard）", brand:"mc", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天","Rakuten","マスター"],
+     note:"Visaと同率3.63%"},
+    {name:"楽天カード（JCB）", brand:"jcb", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天","Rakuten"],
+     note:"楽天はJCBでも1.60%ではなく3.63%"},
+    {name:"楽天カード（Amex）", brand:"amex", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天","Rakuten","アメックス"],
+     note:"全ブランド共通3.63%"},
+    {name:"JCBカードW", brand:"jcb", type:"credit", fee:1.6, pt:1.0, ptName:"Oki Dokiポイント",
+     aliases:["JCB W","JCBダブル","ジェーシービーW"],
+     note:"JCB本体は値上げ未実施で1.60%。海外最安クラス"},
+    {name:"三井住友カード(NL)", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友","NL","ナンバーレス","SMBC"],
+     note:"2024年11月に3.63%へ。タッチ高還元は国内店のみ、海外は0.5%"},
+    {name:"三井住友カード ゴールド(NL)", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["ゴールドNL","三井住友ゴールド","SMBC Gold"],
+     note:"海外事務手数料はNLと同じ3.63%"},
+    {name:"三井住友カード プラチナプリファード", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"Vポイント",
+     aliases:["プラチナプリファード","プレファード"],
+     note:"基本還元1.0%。手数料は他の三井住友と同率3.63%"},
+    {name:"エポスカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"エポスポイント",
+     aliases:["エポス","EPOS","マルイ"],
+     note:"2025年7月に3.85%へ改定"},
+    {name:"エポスゴールドカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"エポスポイント",
+     aliases:["エポスゴールド","EPOS Gold"],
+     note:"2025年7月改定3.85%"},
+    {name:"エポスプラチナカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"エポスポイント",
+     aliases:["エポスプラチナ","EPOS Platinum"],
+     note:"2025年7月改定3.85%"},
+    {name:"リクルートカード（JCB）", brand:"jcb", type:"credit", fee:1.6, pt:1.2, ptName:"リクルートポイント",
+     aliases:["リクルート","Recruit","じゃらん"],
+     note:"JCBブランドなら1.60%。還元1.2%と合わせ有利"},
+    {name:"リクルートカード（Visa）", brand:"visa", type:"credit", fee:3.85, pt:1.2, ptName:"リクルートポイント",
+     aliases:["リクルート","Recruit"],
+     note:"Visa/Masterは3.85%でJCBの倍以上"},
+    {name:"dカード", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"dポイント",
+     aliases:["dカード","ディーカード","ドコモ","docomo"],
+     note:"2025年12月に3.85%へ値上げ。Mastercardも同率"},
+    {name:"dカード Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"dポイント",
+     aliases:["dカードマスター","ディーカード","ドコモ","docomo","マスター"],
+     note:"Visaと同率3.85%（2025年12月改定）"},
+    {name:"dカード GOLD", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"dポイント",
+     aliases:["dカードゴールド","dゴールド"],
+     note:"2025年12月改定3.85%。Mastercardも同率"},
+    {name:"dカード GOLD Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"dポイント",
+     aliases:["dカードゴールドマスター","dゴールド","マスター"],
+     note:"Visaと同率3.85%（2025年12月改定）"},
+    {name:"au PAYカード Visa", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"Pontaポイント",
+     aliases:["auペイカード","エーユー","au","KDDI","ビザ"],
+     note:"現行3.85%。2026年11月20日に4.5%へ改定予定"},
+    {name:"au PAYカード Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"Pontaポイント",
+     aliases:["auペイカードマスター","エーユー","au","KDDI","マスター"],
+     note:"現行3.85%。2026年11月20日に4.5%へ改定予定"},
+    {name:"au PAY ゴールドカード Visa", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"Pontaポイント",
+     aliases:["auペイゴールド","auゴールド","エーユー","KDDI"],
+     note:"現行3.85%。2026年11月20日に4.5%へ改定予定"},
+    {name:"au PAY ゴールドカード Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"Pontaポイント",
+     aliases:["auペイゴールドマスター","auゴールド","エーユー","KDDI","マスター"],
+     note:"現行3.85%。2026年11月20日に4.5%へ改定予定"},
+    {name:"PayPayカード", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"PayPayポイント",
+     aliases:["PayPay","ペイペイ","ヤフーカード","ビザ"],
+     note:"2025年3月に3.85%へ。全ブランド共通"},
+    {name:"PayPayカード Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"PayPayポイント",
+     aliases:["PayPay","ペイペイ","ヤフーカード","マスター"],
+     note:"全ブランド共通3.85%（2025年3月改定）"},
+    {name:"PayPayカード JCB", brand:"jcb", type:"credit", fee:3.85, pt:1.0, ptName:"PayPayポイント",
+     aliases:["PayPay","ペイペイ","ヤフーカード"],
+     note:"全ブランド共通3.85%（2025年3月改定）"},
+    {name:"PayPayカード ゴールド Visa", brand:"visa", type:"credit", fee:3.85, pt:1.5, ptName:"PayPayポイント",
+     aliases:["PayPayゴールド","ペイペイゴールド","ビザ"],
+     note:"全ブランド共通3.85%。基本還元1.5%"},
+    {name:"PayPayカード ゴールド Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.5, ptName:"PayPayポイント",
+     aliases:["PayPayゴールド","ペイペイゴールド","マスター"],
+     note:"全ブランド共通3.85%。基本還元1.5%"},
+    {name:"PayPayカード ゴールド JCB", brand:"jcb", type:"credit", fee:3.85, pt:1.5, ptName:"PayPayポイント",
+     aliases:["PayPayゴールド","ペイペイゴールド"],
+     note:"全ブランド共通3.85%。基本還元1.5%"},
+    {name:"イオンカード", brand:"visa", type:"credit", fee:1.6, pt:0.5, ptName:"WAON POINT",
+     aliases:["イオン","AEON","WAON","ときめき"],
+     note:"1.60%を維持。海外では希少な低手数料クレカ"},
+    {name:"ビックカメラSuicaカード（JCB）", brand:"jcb", type:"credit", fee:1.6, pt:1.0, ptName:"JRE POINT",
+     aliases:["ビックカメラSuica","ビューカード","VIEW"],
+     note:"JCBブランドなら1.60%。Suicaチャージも可"},
+    {name:"ビックカメラSuicaカード（Visa）", brand:"visa", type:"credit", fee:3.85, pt:1.0, ptName:"JRE POINT",
+     aliases:["ビックカメラSuica","ビューカード","VIEW"],
+     note:"Visa/Masterは3.85%。JCB版は1.60%"},
+    {name:"ライフカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"LIFEサンクスポイント",
+     aliases:["ライフ","Life","Stella"],
+     note:"2024年改定で全ブランド3.85%"},
+    {name:"セゾンカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"永久不滅ポイント",
+     aliases:["セゾン","SAISON","永久不滅"],
+     note:"2024年12月に3.85%へ。全ブランド共通"},
+    {name:"UCカード", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"UCポイント",
+     aliases:["UC","ユーシー"],
+     note:"2024年12月にVisa/Masterが3.85%へ"},
+    {name:"JCBゴールド", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCB Gold","ジェーシービーゴールド"],
+     note:"JCB本体は1.60%据置。利用額でボーナス"},
+    {name:"JCBプラチナ", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCB Platinum","ジェーシービープラチナ"],
+     note:"JCB本体は1.60%据置"},
+    {name:"アメックス・グリーン", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"メンバーシップ・リワード",
+     aliases:["アメックスグリーン","Amex Green","AMEX"],
+     note:"本体アメックスは2025年8月に3.5%へ。実質価値は交換先で変動"},
+    {name:"アメックス・ゴールド・プリファード", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"メンバーシップ・リワード",
+     aliases:["アメックスゴールド","Amex Gold","ゴールドプリファード"],
+     note:"2025年8月改定3.5%"},
+    {name:"アメックス・プラチナ", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"メンバーシップ・リワード",
+     aliases:["アメックスプラチナ","Amex Platinum"],
+     note:"2025年8月改定3.5%。リワード・プラス登録で海外3倍にできる（別設定）"},
+    {name:"Marriott Bonvoy アメックス・プレミアム", brand:"amex", type:"credit", fee:3.5, pt:0.0, ptName:"Marriott Bonvoyポイント",
+     aliases:["マリオットボンヴォイ","SPGアメックス","SPG Amex","Marriott"],
+     note:"旧SPGアメックス後継。海外100円=3ポイントだが1P=1円でないため還元は0表示。手数料3.5%"},
+    {name:"ダイナースクラブカード", brand:"diners", type:"credit", fee:2.0, pt:1.0, ptName:"ダイナースクラブ リワード",
+     aliases:["ダイナース","Diners","DC"],
+     note:"2025年12月にDinersブランド2.0%へ。付帯Mastercardは別料率"},
+    {name:"JALカード 普通（Visa/Master）", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"JALマイル",
+     aliases:["JAL","日本航空","JALカード"],
+     note:"2025年1月にVisa/Masterが3.63%へ。ショッピングマイル・プレミアム加入で還元1.0%"},
+    {name:"JALカード 普通（JCB）", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"JALマイル",
+     aliases:["JAL","JALカード JCB","日本航空"],
+     note:"JCBブランドは1.60%。プレミアム加入で還元1.0%"},
+    {name:"ANAカード 一般（JCB）", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANA","全日空","ANA JCB"],
+     note:"JCB準拠で1.60%と推定。移行コースで還元1.0%"},
+    {name:"ANAアメックス", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"ANAマイル",
+     aliases:["ANAアメックス","ANA Amex"],
+     note:"アメックス発行で3.5%と推定。移行コース加入で基本1.0%"},
+    {name:"Sony Bank WALLET（対象通貨）", brand:"mid", type:"debit", fee:0.0, pt:0.5, ptName:"キャッシュバック",
+     aliases:["ソニー銀行","Sony Bank","ソニーバンクウォレット","SBW"],
+     note:"米ドル・ユーロ等10通貨は事務手数料0円＋狭いスプレッド。海外最強クラス"},
+    {name:"Sony Bank WALLET（対象外通貨）", brand:"mid", type:"debit", fee:1.79, pt:0.5, ptName:"キャッシュバック",
+     aliases:["ソニー銀行","Sony Bank"],
+     note:"バーツ・ウォン等の非対応通貨は1.79%"},
+    {name:"プレスティア GLOBAL PASS", brand:"mid", type:"debit", fee:3.0, pt:0.0, ptName:"",
+     aliases:["プレスティア","GLOBAL PASS","グローバルパス","SMBC信託"],
+     note:"対象17通貨は外貨預金から直接引落で0円。それ以外は3.0%"},
+    {name:"住信SBIネット銀行 デビット", brand:"mid", type:"debit", fee:2.5, pt:0.0, ptName:"",
+     aliases:["住信SBI","SBIネット銀行","NEOBANK","SBIデビット"],
+     note:"米ドル決済は年30回まで2.5%ポイントバックで実質0%化できる"},
+    {name:"三菱UFJ-VISAデビット", brand:"mid", type:"debit", fee:3.05, pt:0.2, ptName:"",
+     aliases:["三菱UFJデビット","MUFG Visaデビット"],
+     note:"基準レート＋3.05%"},
+    {name:"みずほ JCBデビット", brand:"mid", type:"debit", fee:3.4, pt:0.0, ptName:"",
+     aliases:["みずほ","Mizuho","みずほデビット"],
+     note:"JCB基準レート＋3.4%。海外ATM引出は不可"},
+    {name:"Wise", brand:"mid", type:"debit", fee:0.45, pt:0.0, ptName:"",
+     aliases:["ワイズ","Wise","TransferWise","トランスファーワイズ","わいず"],
+     note:"事務手数料の上乗せ0。両替時に実勢レート＋変換手数料（通貨により約0.4〜0.6%）。スプレッドを乗せない透明型"},
+    {name:"Revolut", brand:"mid", type:"prepaid", fee:0.0, pt:0.0, ptName:"",
+     aliases:["レボリュート","Revolut","リボルト","レヴォリュート"],
+     note:"事務手数料0。スタンダードは平日ほぼ実勢レート、週末は約1%上乗せ、無料枠超過分に手数料"},
+    {name:"三井住友カード(NL) Mastercard", brand:"mc", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友NL","ナンバーレス","マスター","SMBC NL"],
+     note:"2024年11月改定3.63%。7%還元は国内店のみ"},
+    {name:"三井住友カード ゴールド(NL) Mastercard", brand:"mc", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友ゴールドNL","ゴールドNL","マスター"],
+     note:"2024年11月改定3.63%"},
+    {name:"三井住友カード(一般) Visa", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友通常","一般カード","ビザ","SMBC"],
+     note:"旧・通常カード。2024年11月改定3.63%"},
+    {name:"三井住友カード(一般) Mastercard", brand:"mc", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友通常マスター","一般","マスター"],
+     note:"2024年11月改定3.63%"},
+    {name:"三井住友カード プラチナ Visa", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友プラチナ","platinum","ビザ"],
+     note:"2024年11月改定3.63%"},
+    {name:"三井住友カード プラチナ Mastercard", brand:"mc", type:"credit", fee:3.63, pt:0.5, ptName:"Vポイント",
+     aliases:["三井住友プラチナマスター","platinum"],
+     note:"2024年11月改定3.63%"},
+    {name:"JCB一般カード", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCBオリジナル","JCB一般","ジェーシービー","じぇーしーびー"],
+     note:"JCB本体発行は1.60%据置"},
+    {name:"JCBカードS", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCB S","JCBエス"],
+     note:"JCB本体1.60%"},
+    {name:"JCBゴールド ザ・プレミア", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCB GOLD THE PREMIER","ザプレミア"],
+     note:"招待制。JCB本体1.60%"},
+    {name:"JCBザ・クラス", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"Oki Dokiポイント",
+     aliases:["JCB THE CLASS","ザクラス","最上位JCB"],
+     note:"招待制最上位。JCB本体1.60%"},
+    {name:"楽天ゴールドカード Visa", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天ゴールド","らくてんごーるど","ビザ"],
+     note:"2025年改定で全ブランド3.63%"},
+    {name:"楽天ゴールドカード Mastercard", brand:"mc", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天ゴールドマスター","らくてんごーるど"],
+     note:"全ブランド3.63%"},
+    {name:"楽天ゴールドカード JCB", brand:"jcb", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天ゴールドJCB","らくてんごーるど"],
+     note:"楽天は第三者発行のためJCBも3.63%"},
+    {name:"楽天プレミアムカード Visa", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天プレミアム","らくてんぷれみあむ","ビザ"],
+     note:"プライオリティパス付帯。全ブランド3.63%"},
+    {name:"楽天プレミアムカード Mastercard", brand:"mc", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天プレミアムマスター","らくてんぷれみあむ"],
+     note:"全ブランド3.63%"},
+    {name:"楽天プレミアムカード JCB", brand:"jcb", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天プレミアムJCB","らくてんぷれみあむ"],
+     note:"全ブランド3.63%"},
+    {name:"楽天プレミアムカード Amex", brand:"amex", type:"credit", fee:3.63, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天プレミアムアメックス","らくてんぷれみあむ","AMEX"],
+     note:"全ブランド3.63%"},
+    {name:"三菱UFJカード Visa", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"グローバルポイント",
+     aliases:["MUFGカード","三菱UFJ","エムユーエフジー","ビザ"],
+     note:"現行3.85%。2026年11月16日に4.50%へ改定予定"},
+    {name:"三菱UFJカード Mastercard", brand:"mc", type:"credit", fee:3.85, pt:0.5, ptName:"グローバルポイント",
+     aliases:["MUFGマスター","三菱UFJ","マスター"],
+     note:"現行3.85%。2026年11月16日に4.50%へ改定予定"},
+    {name:"三菱UFJカード JCB", brand:"jcb", type:"credit", fee:2.04, pt:0.5, ptName:"グローバルポイント",
+     aliases:["MUFG JCB","三菱UFJ"],
+     note:"現行2.04%。2026年11月16日に4.34%へ改定予定"},
+    {name:"三菱UFJカード Amex", brand:"amex", type:"credit", fee:2.0, pt:0.5, ptName:"グローバルポイント",
+     aliases:["MUFG Amex","三菱UFJ","AMEX"],
+     note:"現行2.00%。2026年11月16日に4.30%へ改定予定"},
+    {name:"三菱UFJ ゴールドプレステージ Visa", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"グローバルポイント",
+     aliases:["ゴールドプレステージ","MUFGゴールド","ビザ"],
+     note:"現行3.85%。2026年11月に4.50%予定"},
+    {name:"三菱UFJ ゴールドプレステージ Mastercard", brand:"mc", type:"credit", fee:3.85, pt:0.5, ptName:"グローバルポイント",
+     aliases:["ゴールドプレステージマスター","MUFGゴールド"],
+     note:"現行3.85%。2026年11月に4.50%予定"},
+    {name:"三菱UFJ ゴールドプレステージ JCB", brand:"jcb", type:"credit", fee:2.04, pt:0.5, ptName:"グローバルポイント",
+     aliases:["ゴールドプレステージJCB","MUFGゴールド"],
+     note:"現行2.04%。2026年11月に4.34%予定"},
+    {name:"三菱UFJ ゴールドプレステージ Amex", brand:"amex", type:"credit", fee:2.0, pt:0.5, ptName:"グローバルポイント",
+     aliases:["ゴールドプレステージアメックス","MUFGゴールド","AMEX"],
+     note:"現行2.00%。2026年11月に4.30%予定"},
+    {name:"三菱UFJカード プラチナ・アメックス", brand:"amex", type:"credit", fee:2.0, pt:0.5, ptName:"グローバルポイント",
+     aliases:["三菱UFJプラチナ","MUFGプラチナ","プラチナアメックス","AMEX","三菱UFJ"],
+     note:"海外事務手数料はブランド共通。現行2.00%、2026年11月16日に4.30%へ改定予定"},
+    {name:"セゾンパール・アメックス", brand:"amex", type:"credit", fee:3.85, pt:0.5, ptName:"永久不滅ポイント",
+     aliases:["セゾンパール","パールアメックス","QUICPay","AMEX"],
+     note:"2024年12月改定3.85%"},
+    {name:"セゾンブルー・アメックス", brand:"amex", type:"credit", fee:3.85, pt:0.5, ptName:"永久不滅ポイント",
+     aliases:["セゾンブルー","ブルーアメックス","AMEX"],
+     note:"2024年12月改定3.85%"},
+    {name:"セゾンゴールド・アメックス", brand:"amex", type:"credit", fee:3.85, pt:0.5, ptName:"永久不滅ポイント",
+     aliases:["セゾンゴールドアメックス","ゴールドアメックス","AMEX"],
+     note:"2024年12月改定3.85%"},
+    {name:"セゾンプラチナ・ビジネス・アメックス", brand:"amex", type:"credit", fee:3.85, pt:0.5, ptName:"永久不滅ポイント",
+     aliases:["セゾンプラチナビジネス","プラチナアメックス","AMEX"],
+     note:"2024年12月改定3.85%"},
+    {name:"Amazon Mastercard", brand:"mc", type:"credit", fee:3.63, pt:1.0, ptName:"Amazonポイント",
+     aliases:["アマゾンカード","アマゾンマスター","Amazonクレカ","あまぞん"],
+     note:"現在は三井住友発行で3.63%。Amazon利用1.5-2%"},
+    {name:"イオンゴールドカード", brand:"mc", type:"credit", fee:1.6, pt:0.5, ptName:"WAON POINT",
+     aliases:["イオンゴールド","AEON Gold","いおんごーるど"],
+     note:"招待制。イオンは全ブランド1.60%据置"},
+    {name:"イオンカードセレクト", brand:"mc", type:"credit", fee:1.6, pt:0.5, ptName:"WAON POINT",
+     aliases:["イオンセレクト","AEON Select","いおんせれくと"],
+     note:"銀行・クレジット・WAON一体。1.60%"},
+    {name:"ビュー・スイカ カード Visa", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"JRE POINT",
+     aliases:["ビュースイカ","VIEW Suica","びゅーすいか","ビザ"],
+     note:"2024年12月改定 V/M3.85%"},
+    {name:"ビュー・スイカ カード JCB", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"JRE POINT",
+     aliases:["ビュースイカJCB","VIEW Suica"],
+     note:"JCBのみ1.60%据置"},
+    {name:"ルミネカード Visa", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"JRE POINT",
+     aliases:["LUMINEカード","るみね","ルミネ","ビザ"],
+     note:"ビュー発行。V/M3.85%"},
+    {name:"ルミネカード JCB", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"JRE POINT",
+     aliases:["LUMINEカードJCB","るみね"],
+     note:"JCBのみ1.60%"},
+    {name:"ビューゴールドプラスカード Visa", brand:"visa", type:"credit", fee:3.85, pt:0.5, ptName:"JRE POINT",
+     aliases:["ビューゴールド","ビューカードゴールド","VIEW Gold","ビザ"],
+     note:"ビュー発行。V/M3.85%"},
+    {name:"ビューゴールドプラスカード JCB", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"JRE POINT",
+     aliases:["ビューゴールドJCB","ビューカードゴールド"],
+     note:"JCBのみ1.60%据置"},
+    {name:"Orico Card THE POINT Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"オリコポイント",
+     aliases:["オリコザポイント","THE POINT","おりこ","マスター"],
+     note:"入会後半年2.0%。V/M3.85%"},
+    {name:"Orico Card THE POINT JCB", brand:"jcb", type:"credit", fee:3.85, pt:1.0, ptName:"オリコポイント",
+     aliases:["オリコザポイントJCB","THE POINT"],
+     note:"JCBも2025年11月から3.85%"},
+    {name:"Orico Card THE WORLD Mastercard", brand:"mc", type:"credit", fee:3.85, pt:1.0, ptName:"オリコポイント",
+     aliases:["オリコザワールド","THE WORLD","おりこわーるど"],
+     note:"海外利用ポイント優遇。手数料3.85%"},
+    {name:"Orico Card THE WORLD JCB", brand:"jcb", type:"credit", fee:3.85, pt:1.0, ptName:"オリコポイント",
+     aliases:["オリコザワールドJCB","THE WORLD"],
+     note:"JCBも2025年11月から3.85%"},
+    {name:"ANAカード(一般) Visa", brand:"visa", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANA VISA","ANA一般","エーエヌエー","ビザ"],
+     note:"三井住友発行V/Mは1.79%。10マイルコースで還元1.0%"},
+    {name:"ANAカード(一般) Mastercard", brand:"mc", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANAマスター","ANA一般","エーエヌエー"],
+     note:"V/M1.79%。10マイルコースで1.0%"},
+    {name:"ANA ワイドカード Visa", brand:"visa", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANAワイド","ワイドカード","ビザ"],
+     note:"V/M1.79%。搭乗ボーナス25%"},
+    {name:"ANA ワイドカード Mastercard", brand:"mc", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANAワイドマスター","ワイドカード"],
+     note:"V/M1.79%"},
+    {name:"ANA ワイドゴールドカード Visa", brand:"visa", type:"credit", fee:1.79, pt:1.0, ptName:"ANAマイル",
+     aliases:["ANAワイドゴールド","ANAゴールド","ビザ"],
+     note:"ゴールドは10マイルコース標準で1.0%。V/M1.79%"},
+    {name:"ANA ワイドゴールドカード Mastercard", brand:"mc", type:"credit", fee:1.79, pt:1.0, ptName:"ANAマイル",
+     aliases:["ANAワイドゴールドマスター","ANAゴールド"],
+     note:"V/M1.79%。還元1.0%"},
+    {name:"ANA スーパーフライヤーズ Visa", brand:"visa", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANA SFC","スーパーフライヤーズ","SFC","ビザ"],
+     note:"V/M1.79%。ゴールドSFCは1.0%"},
+    {name:"ANA スーパーフライヤーズ Mastercard", brand:"mc", type:"credit", fee:1.79, pt:0.5, ptName:"ANAマイル",
+     aliases:["ANA SFCマスター","スーパーフライヤーズ","SFC"],
+     note:"V/M1.79%"},
+    {name:"JALカード CLUB-A Visa", brand:"visa", type:"credit", fee:3.63, pt:0.5, ptName:"JALマイル",
+     aliases:["JAL CLUB-A","クラブA","じゃる","ビザ"],
+     note:"V/M3.63%。プレミアム加入で還元1.0%"},
+    {name:"JALカード CLUB-A Mastercard", brand:"mc", type:"credit", fee:3.63, pt:0.5, ptName:"JALマイル",
+     aliases:["JAL CLUB-Aマスター","クラブA"],
+     note:"V/M3.63%。プレミアム加入で1.0%"},
+    {name:"JALカード CLUB-A JCB", brand:"jcb", type:"credit", fee:1.6, pt:0.5, ptName:"JALマイル",
+     aliases:["JAL CLUB-A JCB","クラブA"],
+     note:"JCBは1.60%。プレミアム加入で1.0%"},
+    {name:"JALカード CLUB-Aゴールド Visa", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"JALマイル",
+     aliases:["CLUB-Aゴールド","JALゴールド","ビザ"],
+     note:"プレミアム自動付帯で1.0%。V/M3.63%"},
+    {name:"JALカード CLUB-Aゴールド Mastercard", brand:"mc", type:"credit", fee:3.63, pt:1.0, ptName:"JALマイル",
+     aliases:["CLUB-Aゴールドマスター","JALゴールド"],
+     note:"自動プレミアムで1.0%。V/M3.63%"},
+    {name:"JALカード CLUB-Aゴールド JCB", brand:"jcb", type:"credit", fee:1.6, pt:1.0, ptName:"JALマイル",
+     aliases:["CLUB-AゴールドJCB","JALゴールド"],
+     note:"JCB1.60%。自動プレミアムで1.0%"},
+    {name:"JALカード CLUB-EST Visa", brand:"visa", type:"credit", fee:3.63, pt:1.0, ptName:"JALマイル",
+     aliases:["JAL CLUB EST","クラブエスト","20代限定","ビザ"],
+     note:"20代限定。プレミアム自動付帯で1.0%。V/M3.63%"},
+    {name:"JALカード CLUB-EST JCB", brand:"jcb", type:"credit", fee:1.6, pt:1.0, ptName:"JALマイル",
+     aliases:["JAL CLUB EST JCB","クラブエスト"],
+     note:"JCB1.60%。プレミアム自動付帯で1.0%"},
+    {name:"JALカード プラチナ JCB", brand:"jcb", type:"credit", fee:1.6, pt:1.0, ptName:"JALマイル",
+     aliases:["JALプラチナ","JAL・JCBプラチナ","じゃるぷらちな"],
+     note:"JCB1.60%。プレミアム自動付帯で1.0%"},
+    {name:"JALカード 普通 Amex", brand:"amex", type:"credit", fee:2.0, pt:0.5, ptName:"JALマイル",
+     aliases:["JALアメックス","JAL・アメリカン・エキスプレス","じゃる","AMEX"],
+     note:"三菱UFJニコス発行。現行2.00%、2026年11月16日に3.43%へ改定予定"},
+    {name:"JALカード CLUB-A Amex", brand:"amex", type:"credit", fee:2.0, pt:0.5, ptName:"JALマイル",
+     aliases:["JALアメックス","JALクラブA","AMEX"],
+     note:"現行2.00%、2026年11月16日に3.43%へ改定予定"},
+    {name:"JALカード CLUB-Aゴールド Amex", brand:"amex", type:"credit", fee:2.0, pt:1.0, ptName:"JALマイル",
+     aliases:["JALアメックスゴールド","JALクラブAゴールド","AMEX"],
+     note:"現行2.00%、2026年11月16日に3.43%へ改定予定"},
+    {name:"JALカード プラチナ Amex", brand:"amex", type:"credit", fee:2.0, pt:1.0, ptName:"JALマイル",
+     aliases:["JALプラチナアメックス","JAL・アメックス・プラチナ","AMEX"],
+     note:"現行2.00%、2026年11月16日に3.43%へ改定予定"},
+    {name:"ANA アメリカン・エキスプレス・ゴールド・カード", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"ANAマイル",
+     aliases:["ANAアメックスゴールド","エーエヌエー","全日空","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%（2025年8月改定）"},
+    {name:"ANA アメリカン・エキスプレス・プレミアム・カード", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"ANAマイル",
+     aliases:["ANAアメックスプレミアム","エーエヌエー","全日空","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%"},
+    {name:"デルタ スカイマイル アメックス", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"デルタスカイマイル",
+     aliases:["デルタアメックス","Delta","デルタ航空","スカイマイル","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%（2025年8月改定）"},
+    {name:"デルタ スカイマイル アメックス・ゴールド", brand:"amex", type:"credit", fee:3.5, pt:1.0, ptName:"デルタスカイマイル",
+     aliases:["デルタアメックスゴールド","Delta Gold","デルタ航空","スカイマイル","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%"},
+    {name:"Marriott Bonvoy アメックス", brand:"amex", type:"credit", fee:3.5, pt:0.0, ptName:"Marriott Bonvoyポイント",
+     aliases:["マリオットボンヴォイ","マリオット","ボンヴォイ","SPGアメックス","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%（2025年8月改定）"},
+    {name:"ヒルトン・オナーズ アメックス", brand:"amex", type:"credit", fee:3.5, pt:0.0, ptName:"ヒルトン・オナーズポイント",
+     aliases:["ヒルトンアメックス","Hilton","ヒルトン","オナーズ","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%（国内発行は無料対象外）"},
+    {name:"ヒルトン・オナーズ アメックス・プレミアム", brand:"amex", type:"credit", fee:3.5, pt:0.0, ptName:"ヒルトン・オナーズポイント",
+     aliases:["ヒルトンアメックスプレミアム","Hilton Premium","ヒルトン","オナーズ","AMEX"],
+     note:"Amex直営。外貨取扱手数料3.5%"},
+    {name:"楽天銀行デビットカード Visa", brand:"mid", type:"debit", fee:3.08, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天銀行デビット","楽天デビットVisa","らくてんぎんこう"],
+     note:"海外事務手数料3.08%。100円1P"},
+    {name:"楽天銀行デビットカード JCB", brand:"mid", type:"debit", fee:3.08, pt:1.0, ptName:"楽天ポイント",
+     aliases:["楽天銀行デビットJCB","らくてんぎんこう"],
+     note:"3.08%。海外ATM引出もポイント対象"},
+    {name:"GMOあおぞらネット銀行 Visaデビット", brand:"mid", type:"debit", fee:3.08, pt:0.6, ptName:"キャッシュバック",
+     aliases:["GMOあおぞら","あおぞらデビット","GMOデビット"],
+     note:"海外取扱手数料3.08%。還元0.6%(優遇最大1.5%)"},
+    {name:"PayPay銀行 Visaデビットカード", brand:"mid", type:"debit", fee:3.08, pt:0.0, ptName:"PayPayポイント",
+     aliases:["PayPay銀行デビット","ジャパンネット銀行","ぺいぺいぎんこう"],
+     note:"海外事務手数料3.08%"}
+    ];
 
   /* ── 両替（円 → 現地通貨） ── */
   /* スプレッドは実勢レートに対する上乗せ％。すべて目安。 */
@@ -1023,7 +1492,7 @@ details.about[open] > summary::before{content:"− "}
     brand:  "visa",  /* 基準レートに使うブランド */
     atmFee: 220,     /* ATM手数料（円／回） */
     apr:    18.0,    /* 実質年率（％） */
-    days:   30       /* 借入から返済までの日数 */
+    days:    3       /* 借入から返済までの日数（帰国後すぐ繰上返済を想定） */
   };
 
   /* 「レートの良い両替所がない」理由の分類。[見出し, タグ文言, タグ種別]
@@ -3342,7 +3811,8 @@ details.about[open] > summary::before{content:"− "}
     fxSpreads:Object.assign({}, DEF.fxSpreads),
     cash:Object.assign({}, DEF.cash),
     weekend:false,
-    over:false
+    over:false,
+    extraCards:[]        /* 検索で追加したカード。各要素は CARDS と同じ形＋uid */
   };
 
   var KEY = "gaika-ikura-v3";
@@ -3365,8 +3835,16 @@ details.about[open] > summary::before{content:"− "}
             if(typeof s[g][k] === "number" && isFinite(s[g][k])) S[g][k] = s[g][k];
           });
         });
+        /* 返済日数の既定を30→3へ変更したので、旧既定のまま保存されていた端末は
+           一度だけ新既定へ移行する（利用者が意図的に設定した値は次回保存以降尊重） */
+        if(s.migDays !== 1 && S.cash.days === 30) S.cash.days = 3;
         S.weekend = !!s.weekend;
         S.over = !!s.over;
+        if(Array.isArray(s.extraCards)){
+          S.extraCards = s.extraCards.filter(function(c){
+            return c && typeof c.fee === "number" && BRANDS[c.brand];
+          });
+        }
       }
     }catch(e){}
     try{
@@ -3379,8 +3857,8 @@ details.about[open] > summary::before{content:"− "}
       localStorage.setItem(KEY, JSON.stringify({
         cur:S.cur, toCur:S.toCur, fromCur:S.fromCur, city:S.city, cityQuery:S.cityQuery,
         sort:S.sort, fees:S.fees, pts:S.pts,
-        spreads:S.spreads, fxSpreads:S.fxSpreads, cash:S.cash,
-        weekend:S.weekend, over:S.over
+        spreads:S.spreads, fxSpreads:S.fxSpreads, cash:S.cash, extraCards:S.extraCards,
+        weekend:S.weekend, over:S.over, migDays:1
       }));
     }catch(e){}
   }
@@ -3525,8 +4003,13 @@ details.about[open] > summary::before{content:"− "}
     }));
     return isFinite(n) ? n : 0;
   }
+  /* built-in は設定欄で上書きできる。追加カードは自分の値をそのまま使う。 */
+  function baseFee(c){ return (c.id in S.fees) ? S.fees[c.id] : c.fee; }
+  function cardPt(c){  return (c.id in S.pts)  ? S.pts[c.id]  : c.pt;  }
+  function activeCards(){ return CARDS.concat(S.extraCards); }
+
   function effFee(c){
-    var f = S.fees[c.id];
+    var f = baseFee(c);
     if(c.dynamic){
       if(S.weekend) f += 1.0;
       if(S.over)    f += 0.5;
@@ -3766,6 +4249,181 @@ details.about[open] > summary::before{content:"− "}
     save(); rebuildSelects(); render();
   }
 
+  /* ── カードを名前で検索して比較に追加する ── */
+  var cardQuery = "";
+
+  function cardMatches(c, q){
+    if(!q) return false;
+    var hay = norm(c.name + " " + (c.ptName || "") + " " +
+                   BRANDS[c.brand].label + " " + (c.aliases || []).join(" "));
+    return hay.indexOf(q) >= 0;
+  }
+
+  /* 同一カードの判定キー。名前とブランドが一致して初めて同じカードとする。
+     別名は共有しても（例:「楽天」）ブランドが違えば別カードとして追加できる。 */
+  function cardKey(c){ return norm(c.name) + "|" + c.brand; }
+
+  function runCardSearch(){
+    var host = $("cardResults");
+    host.textContent = "";
+    var nq = norm(cardQuery);
+    if(!nq){ return; }
+
+    /* 比較表にある全カードのキー（名前＋ブランド） */
+    var activeKeys = {};
+    activeCards().forEach(function(c){ activeKeys[cardKey(c)] = 1; });
+
+    /* 追加できる候補（比較表にまだ無いもの）と、既にあるもの に分ける */
+    var hits = [], present = [];
+    CARD_DB.forEach(function(c){
+      if(!cardMatches(c, nq)) return;
+      if(activeKeys[cardKey(c)]) present.push(c); else hits.push(c);
+    });
+    activeCards().forEach(function(c){
+      if(cardMatches(c, nq)) present.push(c);
+    });
+
+    var head = document.createElement("div");
+    head.className = "rcount";
+    head.textContent = hits.length
+      ? hits.length + "件。タップで比較に追加します"
+      : (CARD_DB.length ? "候補にありません。下の「手入力で追加」から登録できます"
+                        : "カードのデータを準備中です");
+    host.appendChild(head);
+
+    if(hits.length){
+      var list = document.createElement("div");
+      list.className = "hitlist";
+      hits.slice(0, 30).forEach(function(c){
+        list.appendChild(mkHit(c, function(){ addCard(c); }));
+      });
+      host.appendChild(list);
+      if(hits.length > 30){
+        var more = document.createElement("div");
+        more.className = "rcount";
+        more.textContent = "ほかにも候補があります。名前を足して絞ってください。";
+        host.appendChild(more);
+      }
+    }
+
+    /* すでに比較表にあるカードは、重複追加させず「あります」と知らせる */
+    if(present.length){
+      var seen = {}, names = [];
+      present.forEach(function(c){ if(!seen[c.name]){ seen[c.name] = 1; names.push(c.name); } });
+      var note = document.createElement("div");
+      note.className = "rcount present-note";
+      note.textContent = "「" + names.slice(0, 4).join("」「") + "」は既に比較表にあります";
+      host.appendChild(note);
+    }
+
+    /* 手入力で追加（DBに無いカード用） */
+    var manual = document.createElement("button");
+    manual.type = "button"; manual.className = "manual-add";
+    manual.textContent = "＋ このカードを手入力で追加";
+    manual.addEventListener("click", function(){ openManualAdd(cardQuery); });
+    host.appendChild(manual);
+  }
+
+  /* 候補1件分の見た目（追加ボタン兼用） */
+  function mkHit(c, onClick){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "hit";
+    b.setAttribute("aria-label", c.name + " を追加");
+
+    var main = document.createElement("div");
+    main.className = "hit-main";
+    var nm = document.createElement("span");
+    nm.className = "hit-name"; nm.textContent = c.name;
+    var bt = document.createElement("span");
+    bt.className = "brandtag"; bt.textContent = BRANDS[c.brand].label;
+    main.appendChild(nm); main.appendChild(bt);
+
+    var stats = document.createElement("div");
+    stats.className = "hit-stats";
+    var f = document.createElement("span");
+    f.className = "pill fee"; f.textContent = "手数料 " + c.fee.toFixed(2) + "%";
+    stats.appendChild(f);
+    if(c.pt > 0){
+      var pt = document.createElement("span");
+      pt.className = "pill pt"; pt.textContent = "還元 " + c.pt.toFixed(2) + "%";
+      stats.appendChild(pt);
+    }
+
+    var plus = document.createElement("span");
+    plus.className = "hit-plus"; plus.textContent = "＋";
+
+    b.appendChild(main); b.appendChild(stats); b.appendChild(plus);
+    b.addEventListener("click", onClick);
+    return b;
+  }
+
+  /* 手入力パネルを開いて、名前・ブランド・手数料・還元率を入れて追加する */
+  function openManualAdd(prefillName){
+    var host = $("cardResults");
+    host.textContent = "";
+
+    var box = document.createElement("div");
+    box.className = "manual-box";
+    box.innerHTML =
+      '<div class="eyebrow">カードを手入力で追加</div>' +
+      '<label class="mf"><span>カード名</span>' +
+        '<input id="mfName" type="text" placeholder="例: ○○カード ゴールド Visa"></label>' +
+      '<label class="mf"><span>国際ブランド</span>' +
+        '<select id="mfBrand"></select></label>' +
+      '<div class="mf-row">' +
+        '<label class="mf"><span>海外事務手数料（％）</span>' +
+          '<input id="mfFee" type="text" inputmode="decimal" placeholder="例: 2.20"></label>' +
+        '<label class="mf"><span>還元率（％）</span>' +
+          '<input id="mfPt" type="text" inputmode="decimal" placeholder="例: 1.00"></label>' +
+      '</div>' +
+      '<div class="btns">' +
+        '<button type="button" class="btn primary" id="mfAdd">比較に追加</button>' +
+        '<button type="button" class="btn" id="mfCancel">やめる</button>' +
+      '</div>' +
+      '<p class="hint">手数料・還元率は各社の公表値を入れてください。分からなければ空欄（0）でも追加できます。</p>';
+    host.appendChild(box);
+
+    var sel = $("mfBrand");
+    [["visa","Visa"],["mc","Mastercard"],["jcb","JCB"],["amex","Amex"],
+     ["diners","Diners"],["mid","事務手数料を全額込みで入力"]].forEach(function(o){
+      var op = document.createElement("option");
+      op.value = o[0]; op.textContent = o[1]; sel.appendChild(op);
+    });
+
+    $("mfName").value = prefillName || "";
+    $("mfName").focus();
+
+    $("mfCancel").addEventListener("click", function(){
+      cardQuery = ""; $("cardSearch").value = ""; host.textContent = "";
+    });
+    $("mfAdd").addEventListener("click", function(){
+      var name = $("mfName").value.trim();
+      if(!name){ $("mfName").focus(); return; }
+      addCard({
+        name:name, brand:$("mfBrand").value,
+        fee:parseNum($("mfFee").value), pt:parseNum($("mfPt").value),
+        ptName:"ポイント", note:"手入力で追加"
+      });
+    });
+  }
+
+  function addCard(dbCard){
+    var uid = "x" + Date.now().toString(36) + Math.floor(Math.random() * 1000);
+    S.extraCards.push({
+      id:uid, extra:true,
+      name:dbCard.name, brand:dbCard.brand,
+      fee:dbCard.fee, pt:dbCard.pt,
+      ptName:dbCard.ptName || "", note:dbCard.note || ""
+    });
+    cardQuery = ""; $("cardSearch").value = ""; $("cardResults").textContent = "";
+    save(); render();
+  }
+
+  function removeCard(id){
+    S.extraCards = S.extraCards.filter(function(c){ return c.id !== id; });
+    save(); render();
+  }
+
   /* 元通貨と両替後の通貨を入れ替える */
   function swapCurrencies(){
     var from = S.fromCur;
@@ -3894,12 +4552,12 @@ details.about[open] > summary::before{content:"− "}
     lastJpy = Math.round(midBase);
     el.textContent = fmtYen(midBase);
 
-    var list = CARDS.map(function(c){
+    var list = activeCards().map(function(c){
       var base  = S.amount * cardRate(c);
       var f     = effFee(c);
       var fee   = base * f / 100;
       var total = base + fee;
-      var pt    = total * S.pts[c.id] / 100;
+      var pt    = total * cardPt(c) / 100;
       return {c:c, base:base, f:f, fee:fee, total:total, pt:pt, net:total - pt};
     }).sort(function(a,b){
       return S.sort === "net" ? a.net - b.net : a.total - b.total;
@@ -3925,9 +4583,19 @@ details.about[open] > summary::before{content:"− "}
       row.appendChild(top);
 
       row.appendChild(mkNote(
-        r.c.dynamic && r.f > S.fees[r.c.id]
+        r.c.dynamic && r.f > baseFee(r.c)
           ? r.c.note + "（現在の条件で " + r.f.toFixed(2) + "％）"
           : r.c.note));
+
+      /* 追加したカードは行から外せるように×を出す */
+      if(r.c.extra){
+        var rm = document.createElement("button");
+        rm.type = "button"; rm.className = "card-remove";
+        rm.setAttribute("aria-label", r.c.name + " を比較から外す");
+        rm.textContent = "×";
+        rm.addEventListener("click", function(){ removeCard(r.c.id); });
+        row.appendChild(rm);
+      }
 
       var bar = document.createElement("div");
       bar.className = "bar";
@@ -3938,11 +4606,11 @@ details.about[open] > summary::before{content:"− "}
       bar.setAttribute("aria-label", "商品金額 " + fmtYen(r.base) + "、手数料 " + fmtYen(r.fee));
       row.appendChild(bar);
 
-      if(S.pts[r.c.id] > 0){
+      if(cardPt(r.c) > 0){
         var pl = document.createElement("p");
         pl.className = "ptline";
         pl.innerHTML = '還元率 <b class="a"></b> ／ <b class="b"></b>';
-        pl.querySelector(".a").textContent = S.pts[r.c.id].toFixed(2) + " %";
+        pl.querySelector(".a").textContent = cardPt(r.c).toFixed(2) + " %";
         pl.querySelector(".b").textContent = fmtNum(r.pt) + " " +
           (r.c.ptName.indexOf("マイル") >= 0 ? "マイル" : "ポイント");
         row.appendChild(pl);
@@ -3996,7 +4664,7 @@ details.about[open] > summary::before{content:"− "}
     }
 
     var list = FX.map(function(f){
-      var got, cost, note = f.note, name = f.name;
+      var got, cost, note = f.note, name = f.name, feeYen = null;
 
       if(f.kind === "cash"){
         /* キャッシングは必ず円で請求されるので、元通貨が円のときだけ成立する */
@@ -4005,13 +4673,14 @@ details.about[open] > summary::before{content:"− "}
         got  = amt / rate;
         var interest = amt * (S.cash.apr / 100) * (S.cash.days / 365);
         cost = amt + S.cash.atmFee + interest;
+        feeYen = S.cash.atmFee + interest;   /* 元本に上乗せされる分（ATM手数料＋利息） */
         note = f.note + "（ATM手数料 " + fmtYen(S.cash.atmFee) +
                " ＋ 利息 " + fmtYen(interest) + "／" + Math.round(S.cash.days) + "日）";
       }else{
         got  = jpyValue / (toRate * (1 + S.fxSpreads[f.id] / 100));
         cost = amt;
       }
-      return {f:f, name:name, note:note, got:got, cost:cost, eff:cost / got};
+      return {f:f, name:name, note:note, got:got, cost:cost, eff:cost / got, feeYen:feeYen};
     }).filter(Boolean)
       .sort(function(a,b){ return b.got / b.cost - a.got / a.cost; });
 
@@ -4051,7 +4720,9 @@ details.about[open] > summary::before{content:"− "}
       var figs = [
         ["受取額",     fmtFx(r.got), "total"],
         ["実質レート", fmtRate(r.eff) + " " + from, ""],
-        ["支払う" + fromUnit, fmtCur(from, r.cost), ""],
+        ["支払う" + fromUnit,
+         fmtCur(from, r.cost) +
+           (r.feeYen != null ? "（うち手数料 " + fmtYen(r.feeYen) + "）" : ""), ""],
         ["最良との差", isBest ? "—" : "−" + fmtFx(diffTo),
                        "diff" + (isBest ? " zero" : "")]
       ];
@@ -4261,6 +4932,20 @@ details.about[open] > summary::before{content:"− "}
       if(hits && hits.length) selectCur(hits[0], which);
     });
   });
+
+  /* カード検索欄。こちらも変換確定を待つ。 */
+  (function(){
+    var el = $("cardSearch"), composingCard = false;
+    function update(){
+      cardQuery = el.value;
+      if(composingCard) return;
+      runCardSearch();
+    }
+    el.addEventListener("input", update);
+    el.addEventListener("compositionstart", function(){ composingCard = true; });
+    el.addEventListener("compositionend", function(){ composingCard = false; update(); });
+  })();
+
   $("citySel").addEventListener("change", function(){
     S.city = this.value;
     if(S.city !== "__manual__") S.cityQuery = "";
@@ -4321,8 +5006,6 @@ details.about[open] > summary::before{content:"− "}
 
 
 <script>
-/* オフラインで起動できるようにする。https 以外（file:// や Artifact）では
-   登録しないので、他の配布方法の動作には影響しない。 */
 (function(){
   if(!("serviceWorker" in navigator)) return;
   if(location.protocol !== "https:") return;
