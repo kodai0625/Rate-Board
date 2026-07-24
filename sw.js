@@ -4,7 +4,7 @@
    方針はネットワーク優先。オンラインなら必ず最新版を取りに行き、
    取れなければ端末の控えを返す。更新のたびに CACHE の版を上げること。 */
 
-var CACHE = "rate-board-v10";
+var CACHE = "rate-board-v11";
 
 var ASSETS = [
   "./",
